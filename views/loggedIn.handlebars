@@ -19,12 +19,27 @@
 
 <body>
       <div class="container">
-      	<h1>logged in</h1>
+	<h2>You are {{title}}</h2>
 	
-	<a href="/auth/facebook">FB LOGIN</a>
+	<button class="showinfo">show FB info click here</button>
+	<p id="fbinfo">Your name is {{name}}<br/>
+	This is your email address: {{email}} <br/>
+	Your birthday is {{birthday}}.</p>
 	
     </div>
+      
+       
     <script src="https://code.jquery.com/jquery.js"></script>
     <script src="js/bootstrap.js"></script>
+    
+   <script>
+	$(document).ready(function(){
+		$("#fbinfo").hide();
+  $(".showinfo").click(function(){
+  $("#fbinfo").fadeIn();
+});
+});
+	
+   </script>
 </body>
 </html>

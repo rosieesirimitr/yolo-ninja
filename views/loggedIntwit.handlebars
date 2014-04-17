@@ -19,15 +19,28 @@
 
 <body>
       <div class="container">
-	<h3>boilaaaaplate</h3>
+	<h2>You are {{title}}</h2> tweeet
 	
-	<button><a href="/auth/facebook">FB LOGIN</a></button>
-	<button><a href="/auth/twitter">TWITTER LOGIN</a></button>
-	
-	
+	<button class="showinfo">show FB info click here</button>
+	<p id="fbinfo">
+		 <h2>My Twitter name is {{name}}</h2>
+		 <a href=/showMostRecentTweet>most recent</a>
+	</p>
 	
     </div>
+      
+       
     <script src="https://code.jquery.com/jquery.js"></script>
     <script src="js/bootstrap.js"></script>
+    
+   <script>
+	$(document).ready(function(){
+		$("#fbinfo").hide();
+  $(".showinfo").click(function(){
+  $("#fbinfo").fadeIn();
+});
+});
+	
+   </script>
 </body>
 </html>

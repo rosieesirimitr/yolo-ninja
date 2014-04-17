@@ -1,7 +1,7 @@
 {
   "name": "Boilerplate",
   "version": "0.0.1",
-  "author": "Chu Shao",
+  "author": "Rosiee Sirimitr",
   "scripts": {
     "start": "node app.js"
   },
@@ -14,7 +14,8 @@
     "passport-facebook": "*",
     "passport-twitter": "*",
     "dotenv": "*",
-    "fbgraph": "*"
+    "fbgraph": "*",
+    "twit": "*"
   },
   "engines": {
     "node": "0.10.x"
