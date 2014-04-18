@@ -14,6 +14,7 @@
     "passport-facebook": "*",
     "passport-twitter": "*",
     "dotenv": "*",
+    "oauth": "*",
     "fbgraph": "*",
     "twit": "*"
   },

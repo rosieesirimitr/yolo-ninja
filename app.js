@@ -11,12 +11,14 @@ var dotenv = require('dotenv');
 dotenv.load();
 var graph = require('fbgraph');
 var Twit = require('twit');
+var OAuth = require('oauth');
 
 exports.graph = graph;
 
 //route files to load
 var index = require('./routes/index');
 var loggedIn = require('./routes/LoggedIn');
+
 
 //database setup - uncomment to set up your database
 //var mongoose = require('mongoose');
@@ -42,10 +44,14 @@ app.configure('production', function(){
 
 //routes
 app.get('/', function(req, res){
-  res.render("index", { title: "click link to connect" });
+  res.render("index");
 });
 app.get('/loggedIn', function(req,res) {
-	res.render("loggedIn", {title: "logged in"});
+	res.render("loggedIn");
+});
+
+app.get('/loggedIntwit', function(req,res) {
+	res.render("loggedIntwit");
 });
 
 //authenticate fb
@@ -101,74 +107,26 @@ app.get('/UserHasLoggedIn', function(req, res) {
   });
 });
 
-//twitter stuff
-var twitter_consumer_key=         process.env.consumer_key;
-var twitter_consumer_secret=      process.env.consumer_secret;
-var access_token=        process.env.access_token;
-var access_token_secret=  process.env.access_token_secret;
 
-var OAuth = require('oauth', twitter_consumer_key, twitter_consumer_secret).OAuth
-  , oauth = new OAuth(
-      "https://api.twitter.com/oauth/request_token",
-      "https://api.twitter.com/oauth/access_token",
-      "twitter_consumer_key",
-      "twitter_consumer_secret",
-      "1.0",
-      "http://localhost:3000/auth/twitter/callback",
-      "HMAC-SHA1"
-    );
 
-app.get('/auth/twitter', function(req, res) {
- 
-  oauth.getOAuthRequestToken(function(error, oauth_token, oauth_token_secret, results) {
-    if (error) {
-      console.log(error);
-      res.send("Authentication Failed!");
-    }
-    else {
-      req.session.oauth = {
-        token: oauth_token,
-        token_secret: oauth_token_secret
-      };
-      console.log(req.session.oauth);
-      res.redirect('https://twitter.com/oauth/authenticate?oauth_token='+oauth_token)
-    }
-  });
- 
+app.get('/loggedIntwit', function(req, res) {
+
+    var T = new Twit({
+    consumer_key:         'process.env.consumer_key'
+  , consumer_secret:      'process.env.consumer_secret'
+  , access_token:         'process.env.access_token'
+  , access_token_secret:  'process.env.access_token_secret'
 });
+  
 
-//define route when twitter done authenticating
-app.get('/auth/twitter/callback', function(req, res, next) {
- 
-  if (req.session.oauth) {
-    req.session.oauth.verifier = req.query.oauth_verifier;
-    var oauth_data = req.session.oauth;
- 
-    oauth.getOAuthAccessToken(
-      oauth_data.token,
-      oauth_data.token_secret,
-      oauth_data.verifier,
-      function(error, oauth_access_token, oauth_access_token_secret, results) {
-        if (error) {
-          console.log(error);
-          res.send("Authentication Failure!");
-        }
-        else {
-          req.session.oauth.access_token = oauth_access_token;
-          req.session.oauth.access_token_secret = oauth_access_token_secret;
-          console.log(results, req.session.oauth);
-          res.send("Authentication Successful");
-           res.redirect('loggedIntwit'); //You might actually want to redirect!
-        }
-      }
-    );
-  }
-  else {
-    res.redirect('/loggedIntwit'); // Redirect to login page
-  }
- 
+  T.get('loggedIntwit', { q: 'banana', count: 100 }, function(req, res) {
+	 console.log(res);
+	 res.render('loggedIntwit', {
+		title: "is logged in with Twitter!",
+		"stuff": res.q,
+	 });
 });
-
+});
 
 //set environment ports and start application
 app.set('port', process.env.PORT || 3000);
